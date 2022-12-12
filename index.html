@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>convForm - example</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="dist/jquery.convform.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="demo.css">
+</head>
+<body>
+	<section id="demo">
+	    <div class="vertical-align">
+	        <div class="container">
+	            <div class="row">
+	                <div class="col-sm-6 col-sm-offset-3 col-xs-offset-0">
+	                    <div class="card no-border">
+	                        <div id="chat" class="conv-form-wrapper">
+	                            <form action="" method="GET" class="hidden">
+	                                <select data-conv-question="Olá, tudo bem? Eu sou o CapiBot 🤖. Estou aqui para te auxiliar em algumas dúvidas no processo do cadastro. Podemos começar? 😊" name="first-question">
+	                                    <option value="👍">👍</option>
+	                                    <option value="✌">✌</option>
+	                                </select>
+	                                <input type="text" name="name" data-conv-question="Que ótimo! Para começarmos digite seu nome completo, por favor:">
+	                                <input type="text" data-conv-question="Olá, {name}:0! É um prazer te conhecer! Seja muito bem vindo/a 🤖" data-no-answer="true">
+	                               
+	                              
+
+	                                <select name="denada" data-callback="storeState" data-conv-question="Para que eu consiga te ajudar, digite o número da sua pergunta: <br> 01- Qual o objetivo deste cadastro? <br> 02- Quais sãos os documentos que devo ter em mãos para realizar esse cadastro? <br> 03-É seguro colocar meus dados aqui? <br> 04-Falar com um humano do Setor Responsável">
+	                                    <option value="1">1</option>
+	                                    <option value="2">2</option>
+	                                </select>
+	                                <div data-conv-fork="denada">
+	                                    <div data-conv-case="1">
+	                                        <input type="text" data-conv-question="1111." data-no-answer="true">
+	                                    </div>
+	                                    <div data-conv-case="2">
+											<input type="text" data-conv-question="222" data-no-answer="true">
+	                                    </div>
+	                                </div>
+	                            
+	                                <select data-conv-question="This is it! If you like me, consider donating! If you need support, contact me. When the form gets to the end, the plugin submits it normally, like you had filled it." id="">
+	                                    <option value="">Awesome!</option>
+	                                </select>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+	<script type="text/javascript" src="jquery-1.12.3.min.js"></script>
+	<script type="text/javascript" src="dist/autosize.min.js"></script>
+	<script type="text/javascript" src="dist/jquery.convform.js"></script>
+
+	<script>
+		function google(stateWrapper, ready) {
+			window.open("https://google.com");
+			ready();
+		}
+		function bing(stateWrapper, ready) {
+			window.open("https://bing.com");
+			ready();
+		}
+		var rollbackTo = false;
+		var originalState = false;
+		function storeState(stateWrapper, ready) {
+			rollbackTo = stateWrapper.current;
+			console.log("storeState called: ",rollbackTo);
+			ready();
+		}
+		function rollback(stateWrapper, ready) {
+			console.log("rollback called: ", rollbackTo, originalState);
+			console.log("answers at the time of user input: ", stateWrapper.answers);
+			if(rollbackTo!=false) {
+				if(originalState==false) {
+					originalState = stateWrapper.current.next;
+						console.log('stored original state');
+				}
+				stateWrapper.current.next = rollbackTo;
+				console.log('changed current.next to rollbackTo');
+			}
+			ready();
+		}
+		function restore(stateWrapper, ready) {
+			if(originalState != false) {
+				stateWrapper.current.next = originalState;
+				console.log('changed current.next to originalState');
+			}
+			ready();
+		}
+	</script>
+	<script>
+		jQuery(function($){
+			convForm = $('#chat').convform({selectInputStyle: 'disable'});
+			console.log(convForm);
+		});
+	</script>
+</body>
+</html>
